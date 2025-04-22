@@ -86,6 +86,7 @@ key = [2, 5, 7, 1]
 cipher = rc4(n, l, key)
 keyde = cipher.gen()
 keybi = cipher.biresult(keyde)
+print("The keystream is:",keybi)
 
 final = []
 for i in range(len(keybi)):
@@ -95,4 +96,4 @@ for i in range(len(keybi)):
     else:
         final.append(summ)
     
-print(final)
+print("The final result after xor is:",final)
