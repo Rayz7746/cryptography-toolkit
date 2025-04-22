@@ -1,7 +1,8 @@
-#Raymond Zha for Q1
+#Raymond Zha for Q1 part a
 # two functions:
 def DecimalToBinary(number,n):
-    """ DecimalToBinary(100, 8) should output [0,1,1,0,0,1,0,0]
+    """ 
+    with two integer inputs number and n. Its output is an array of size n, returning the binary representation of number.
 
     Args:
         number (int): numbers in decimal
@@ -10,6 +11,7 @@ def DecimalToBinary(number,n):
     
     res = []
     qu = number
+    # convert to binary
     while qu != 0:
         rem = qu % 2
         qu = qu //2
@@ -17,7 +19,7 @@ def DecimalToBinary(number,n):
     
     if len(res)>n:
         return
-    # fill with zero
+    # fill with zero and reverse to get the correct order
     diff = n - len(res)
     for i in range(diff):
         res.append(0)
@@ -27,9 +29,8 @@ def DecimalToBinary(number,n):
 
 def ConvertBitArraytoInt(k, n):
     """
-    take an array of bits and n, and output an array of integers with every n bits converted to
-        its decimal representation. So ConvertBitArraytoInt([1,0,0,0,0,0,1,1,1,0,0,1], 3)
-        should output [4, 0, 7, 1].
+    take an array of bits and n, and output an array of integers with every n bits converted to its decimal representation. 
+    So ConvertBitArraytoInt([1,0,0,0,0,0,1,1,1,0,0,1], 3) should output [4, 0, 7, 1].
  
 
     Args:
