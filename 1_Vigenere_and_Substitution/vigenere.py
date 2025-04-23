@@ -1,5 +1,19 @@
-# Raymond Zha for Q2
-# note that Q2 need the file hw1Q2-plaintext.txt and hw1Q2-ciphertext.txt in order to run
+# Vigenere Cipher Implementation
+# ------------------------------
+# This program implements the Vigenere cipher, a polyalphabetic substitution cipher
+# that uses a keyword to encrypt and decrypt messages.
+#
+# Input file requirements:
+# - vig-plain.txt: Contains alternating lines of plaintext and keys for encryption
+# - vig-cipher.txt: Contains alternating lines of ciphertext and keys for decryption
+#
+# How it works:
+# - Encryption: Each letter in plaintext is shifted by corresponding letter in the key
+# - Decryption: Each letter in ciphertext is shifted backward by corresponding key letter
+#
+# The program automatically processes all text pairs in the input files and displays results
+
+import os
 
 alpha = "abcdefghijklmnopqrstuvwxyz"
 #some tools here:
@@ -42,8 +56,14 @@ def vig_de(cipher,key):
 
 # the above are the functions, below are reading file parts, please change the name in order to read the files
 
+
+
+# Get the directory where the script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
 # for encrypt use the following:
-with open('hw1Q2-plaintext.txt','r') as file:
+plain_file_path = os.path.join(script_dir, 'vig-plain.txt')
+with open(plain_file_path, 'r') as file:
     plain_content = file.read()
     pla = plain_content.splitlines()
     print("### Result of Encryption ###")
@@ -52,8 +72,9 @@ with open('hw1Q2-plaintext.txt','r') as file:
         
 print()
 
-#for decrypt use the following:
-with open('hw1Q2-ciphertext.txt','r') as file:
+# for decrypt use the following:
+cipher_file_path = os.path.join(script_dir, 'vig-cipher.txt')
+with open(cipher_file_path, 'r') as file:
     cipher_content = file.read()
     cip = cipher_content.splitlines()
     print("### Result of Decryption ###")

@@ -1,6 +1,63 @@
-#Raymond Zha question 3 part a, no handwritten part for part a, guessing is in the comments already
-# you need the file in order to run the program
-with open('hw1Q3-ciphertext.txt','r') as file:
+# Kasiski Examination for Cryptanalysis
+# --------------------------------------
+# This script implements the Kasiski examination method to determine the 
+# key length of a Vigenère cipher by analyzing the distances between repeated 
+# trigrams (three-letter sequences) in the ciphertext.
+#
+# Description:
+#    The Kasiski examination works by identifying repeated patterns in the 
+#    ciphertext and measuring the distances between them. In a Vigenère cipher,
+#    if the same plaintext fragment is encrypted with the same portion of the key,
+#    it will produce the same ciphertext fragment. The distances between these 
+#    repeated fragments are likely to be multiples of the key length.
+#
+# Input:
+#    - 'kasiski.txt': A text file containing the ciphertext to be analyzed.
+#      The file should be in the same directory as this script.
+#
+# Algorithm:
+#    1. Read the ciphertext from 'kasiski.txt'
+#    2. Find all trigrams (three-letter sequences) in the text and their frequencies
+#    3. Filter out trigrams that only appear once
+#    4. Sort the remaining trigrams by frequency (most frequent first)
+#    5. For each repeating trigram, find all its occurrences and calculate the 
+#       distances between consecutive occurrences
+#    6. Analyze these distances to identify potential key lengths
+#
+# Output:
+#    Prints the sorted list of trigrams that appear more than once, with their frequencies.
+#    For each such trigram, prints the distances between consecutive occurrences.
+#    These distances can be analyzed to determine the likely key length of the cipher.
+#
+# Usage:
+#    Run the script directly. It will look for 'kasiski.txt' in the same directory.
+#
+# Notes:
+#    - The key length is likely to be a common factor of the distances between repeated trigrams
+#    - In the example output, most distances are multiples of 5, suggesting a key length of 5
+#    - This implementation is designed for educational purposes to demonstrate the principles 
+#      of the Kasiski examination technique
+
+# Workflow:
+#    This script is the first step in breaking a Vigenère cipher:
+#    1. Use this script (kasiski_distance.py) to determine the likely key length
+#    2. Next, use kasiski_frequency.py to analyze letter frequencies within each
+#       column of the ciphertext and determine the actual key
+#
+#    The distances between repeated trigrams calculated here will help identify
+#    the most probable key length, which is essential for the frequency analysis
+#    performed in the next step.
+
+
+import os
+
+# Get the directory where the script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Create the full path to the text file
+file_path = os.path.join(script_dir, 'kasiski.txt')
+
+# Use the full path to open the file
+with open(file_path, 'r') as file:
     content = file.read()
 
 trigram = {}
@@ -33,6 +90,7 @@ for pair in newtri:
 
 #for the below output, we can easily guess that the key length of Q3 is just 5, since most of the output is a multipler of 5
 
+# example result
 
 """
 For string "slr" 
