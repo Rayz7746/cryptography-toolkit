@@ -1,72 +1,53 @@
-#Raymond Zha for Q1 part c
-from q1a import rc4
+"""
+RC4 Stream Cipher Application
+-----------------------------
+This program demonstrates the RC4 stream cipher algorithm for decryption.
 
-def DecimalToBinary(number,n):
-    """ 
-    with two integer inputs number and n. Its output is an array of size n, returning the binary representation of number.
+The RC4 (Rivest Cipher 4) is a symmetric stream cipher that works by:
+1. Initializing a state array based on a secret key
+2. Generating a pseudorandom keystream
+3. XORing the keystream with ciphertext to recover plaintext
 
-    Args:
-        number (int): numbers in decimal
-        n (int): arraysize
-    """
-    
-    res = []
-    qu = number
-    # convert to binary
-    while qu != 0:
-        rem = qu % 2
-        qu = qu //2
-        res.append(rem)
-    
-    if len(res)>n:
-        return
-    # fill with zero and reverse to get the correct order
-    diff = n - len(res)
-    for i in range(diff):
-        res.append(0)
-    res.reverse()
-    return res
-# print(DecimalToBinary(100,8))
+Usage:
+- Ensure rc4.py is in the same directory
+- Set your parameters (n=8 bits, l=61 for state array length)
+- Define your key as a bit array
+- Run: python application.py
 
-def ConvertBitArraytoInt(k, n):
-    """
-    take an array of bits and n, and output an array of integers with every n bits converted to its decimal representation. 
-    So ConvertBitArraytoInt([1,0,0,0,0,0,1,1,1,0,0,1], 3) should output [4, 0, 7, 1].
- 
+Parameters:
+- n: Bit processing size (8-bit/byte-oriented)
+- l: Length of state array
+- key: Secret key as a bit array 
 
-    Args:
-        Arrayk (array): array with 1 and 0
-        intn (int): divide number
-    """
-    if len(k) % n !=0:
-        return
-    res = [None]*(len(k)//n)
-    num = 0
-    # highest 2^n-1
-    for i in range(len(k)):
-        # number = 2^n-1 + 2^n-2 ...
-        power = k[i]*(2**(n-i%n-1))
-        num += power
-        if i % n ==(n-1):
-            qu = i//n
-            res[qu] = num
-            num = 0
-    
-    return res
+The program performs the following steps:
+1. Initializes the RC4 cipher with key and parameters
+2. Generates a keystream
+3. XORs the keystream with the provided ciphertext
+4. Converts the resulting bit array to ASCII characters
+5. Displays the decrypted message
 
+"""
 
-n = 8
-l = 61
+from rc4 import rc4, DecimalToBinary, ConvertBitArraytoInt
+
+# Define RC4 parameters
+n = 8  # 8-bit processing (byte-oriented)
+l = 61  # Length of the state array
+# Define the secret key as a bit array
 key=[1, 0, 1, 1, 1, 0, 0, 1 , 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 
      1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1]
+# Convert bit array to integer representation for RC4
 key = ConvertBitArraytoInt(key,n)
 
+# Initialize RC4 cipher with parameters and key
 partc = rc4(n,l,key)
+# Generate the keystream
 ksde = partc.gen()
+# Convert keystream to binary representation
 keystream = partc.biresult(ksde)
 print("The generated keystream is:", keystream)
 
-
+# The encrypted ciphertext as a bit array
 ciphertext= [1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0,
              1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1,
              0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 
@@ -81,18 +62,21 @@ ciphertext= [1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1
              0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 
              1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1]
 
+# Decrypt the ciphertext by XORing with keystream
+# In binary XOR: 0⊕0=0, 0⊕1=1, 1⊕0=1, 1⊕1=0
 final = []
 for i in range(len(ciphertext)):
     summ = ciphertext[i]+keystream[i]
-    if summ == 2:
+    if summ == 2:  # If both bits are 1, XOR gives 0
         final.append(0)
-    else:
+    else:  # Otherwise, XOR gives the sum
         final.append(summ)
-# print("The final ASCII is:",final)
+
+# Convert bit array to ASCII integers
 ASCII = ConvertBitArraytoInt(final,n)
 print(ASCII)
 
-
+# Convert ASCII integers to readable text
 message = ''.join(chr(value) for value in ASCII)
 print(message)
-#elephants rode unicycles through a field of rainbow spaghetti
+# Output: elephants rode unicycles through a field of rainbow spaghetti

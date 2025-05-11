@@ -1,17 +1,31 @@
-#Raymond Zha for Q1 part a
-# two functions:
-def DecimalToBinary(number,n):
-    """ 
-    with two integer inputs number and n. Its output is an array of size n, returning the binary representation of number.
+# RC4 Stream Cipher Implementation
+# -------------------------------
+# This script implements the RC4 (Rivest Cipher 4) stream cipher algorithm,
+# along with necessary binary/decimal conversion utilities.
+#
+# Description:
+#    RC4 is a symmetric key stream cipher that operates by generating a pseudorandom stream of bits
+#    which is combined with the plaintext using bitwise XOR to produce the ciphertext.
+#    This implementation provides a modular approach with initialization, permutation, 
+#    and keystream generation phases following the standard RC4 algorithm.
+#
+# Components:
+#    1. Binary/Decimal Conversion Utilities:
+#       - DecimalToBinary: Converts decimal numbers to binary arrays of specified length
+#       - ConvertBitArraytoInt: Converts bit arrays to arrays of integers
+#
+#    2. RC4 Implementation:
+#       - Initialization: Creates and initializes the S-box with values 0 to 2^n-1 
+#         and prepares the key array
+#       - Permutation: Scrambles the S-box based on the key values
+#       - Keystream: Generates the keystream of specified length using the permuted S-box
+#       - Utility methods: Provides conversion and management functions
 
-    Args:
-        number (int): numbers in decimal
-        n (int): arraysize
-    """
-    
+# Two converting tools
+def DecimalToBinary(number,n):
+    """Converts a decimal number to a binary array of length n"""
     res = []
     qu = number
-    # convert to binary
     while qu != 0:
         rem = qu % 2
         qu = qu //2
@@ -19,24 +33,14 @@ def DecimalToBinary(number,n):
     
     if len(res)>n:
         return
-    # fill with zero and reverse to get the correct order
     diff = n - len(res)
     for i in range(diff):
         res.append(0)
     res.reverse()
     return res
-# print(DecimalToBinary(100,8))
 
 def ConvertBitArraytoInt(k, n):
-    """
-    take an array of bits and n, and output an array of integers with every n bits converted to its decimal representation. 
-    So ConvertBitArraytoInt([1,0,0,0,0,0,1,1,1,0,0,1], 3) should output [4, 0, 7, 1].
- 
-
-    Args:
-        Arrayk (array): array with 1 and 0
-        intn (int): divide number
-    """
+    """Converts a bit array to an array of integers, each using n bits"""
     if len(k) % n !=0:
         return
     res = [None]*(len(k)//n)
@@ -52,11 +56,7 @@ def ConvertBitArraytoInt(k, n):
             num = 0
     
     return res
-# print(ConvertBitArraytoInt([1,0,0,0,0,0,1,1,1,0,0,1], 3))
 
-
-
-#Raymond Zha for Q1
 
 # RC4 Generating keystream(functions all in decimal)
 class rc4:
@@ -75,6 +75,7 @@ class rc4:
         
     # output the final form in n*l
     def biresult(self,res:list):
+        """Converts the decimal result to binary format"""
         newlist =[]
         final = []
         for num in res:
@@ -87,6 +88,16 @@ class rc4:
         
     # 1. Initialization
     def Initialization(self, k:list, n:int):
+        """
+        Initialize the S-box and key array T
+        
+        Args:
+            k (list): Key array
+            n (int): Parameter determining size of S-box (2^n)
+            
+        Returns:
+            tuple: Contains the S-box and key array T
+        """
         last = 2**n
         lenk = len(k)
         # List from 0 to 2^n -1
@@ -103,6 +114,15 @@ class rc4:
 
     # 2. Permutation
     def Permutation(self, ini:tuple):
+        """
+        Permute the S-box based on the key array
+        
+        Args:
+            ini (tuple): Contains the S-box and key array T
+            
+        Returns:
+            list: Permuted S-box
+        """
         # get S and T from tuple
         S = ini[0]
         T = ini[1]
@@ -121,6 +141,16 @@ class rc4:
 
     #3. Generate the Keystream
     def Keystream(self, S:list, k:int):
+        """
+        Generate the keystream using the permuted S-box
+        
+        Args:
+            S (list): Permuted S-box
+            k (int): Length of keystream needed
+            
+        Returns:
+            list: Generated keystream
+        """
         #k is the length of keystream needed
         keystream =[]
         lenk = len(S)
@@ -140,6 +170,12 @@ class rc4:
     
     # main generating function for the whole process
     def gen(self):
+        """
+        Execute the complete RC4 keystream generation process
+        
+        Returns:
+            list: Generated keystream in decimal format
+        """
         n = self.n
         l = self.l
         key = self.key
@@ -149,65 +185,3 @@ class rc4:
         res = self.Keystream(perlist,l)
         
         return res
-    
-
-
-
-
-
-# # Test RC4 implementation note that the key is in the form of decimal
-
-# # Initialize RC4 with parameters: n=3 (working with 3-bit numbers), l=11 (11 characters), key=[3,1,4,7,5]
-# print("Initializing RC4 with:")
-# print(f"  n = 3 (S-box size will be 2^3 = 8)")
-# print(f"  l = 11 (generating keystream of length 11)")
-# print(f"  key = [3,1,4,7,5]")
-# test = rc4(3, 11, [3,1,4,7,5])
-
-# # Generate and display keystream in decimal
-# keystream_decimal = test.gen()
-# print("Keystream in decimal:")
-# print(f"  {keystream_decimal}")
-
-# # Convert keystream to binary representation
-# keystream_binary = test.biresult(keystream_decimal)
-# print("Keystream in binary (flattened):")
-# print(f"  {keystream_binary}")
-
-# # Convert binary keystream back to decimal (in 3-bit chunks)
-# keystream_chunks = ConvertBitArraytoInt(keystream_binary, 3)
-# print("Keystream binary converted back to decimal (3-bit chunks):")
-# print(f"  {keystream_chunks}")
-
-
-# Main function to run RC4 with user inputs
-def main():
-    n = int(input("Enter n (parameter for RC4, determines S-box size 2^n): "))
-    l = int(input("Enter l (length of plaintext/ciphertext in characters): "))
-    key_bits_str = input("Enter key as bit array (space-separated 0s and 1s): ")
-    key_bits = [int(bit) for bit in key_bits_str.split()]
-    
-    # Check if bit array length is a multiple of n
-    if len(key_bits) % n != 0:
-        print(f"Error: The length of the bit array must be a multiple of n.")
-        return
-    
-    # Convert bit array to decimal values
-    key_decimal = ConvertBitArraytoInt(key_bits, n)
-    
-    cipher = rc4(n, l, key_decimal)
-    keyde = cipher.gen()
-    
-    # Convert to binary representation and print final result
-    keybi = cipher.biresult(keyde)
-    print(keybi)
-
-if __name__ == "__main__":
-    main()
-
-
-
-# - Enter n: 3
-# - Enter l: 11
-# - Enter key as bit array: 0 1 1 0 0 1 1 0 0 1 1 1 1 0 1
-# This converts to key_decimal = [3, 1, 4, 7, 5]
