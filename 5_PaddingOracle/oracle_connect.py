@@ -1,12 +1,8 @@
-"""
- Santa Clara University: CSCI 181
-"""
+# Oracle Connect files
+
 sock = None
 
 BLOCKSIZE= 16
-
-SERVERPORT= 12001
-SERVERIP = "18.217.20.161"
 
 def oracle_connect():
     import socket

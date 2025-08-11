@@ -1,3 +1,61 @@
+# SimpleCoin: Minimal UTXO Ledger and Blockchain Simulation
+# ---------------------------------------------------------
+# This module implements a simplified, educational model of a Bitcoin-like UTXO system.
+#
+# Description:
+#   The system tracks coins (UTXOs) created and consumed by transactions and records them
+#   on a linear blockchain. Each block contains exactly one transaction for simplicity.
+#   Transactions are of two types:
+#     - CreateCoin: Mints new coins (only the trusted authority G can issue them)
+#     - PayCoin:    Consumes existing coins and creates new ones of equal total value
+#
+#   The Ledger is the central authority that validates transactions, assigns sequential
+#   transaction IDs, appends blocks to the chain, and maintains the set of unspent coins.
+#
+# Key components:
+#   - Coin:                   Represents a single UTXO (transaction_id, output_index, value, recipient_pubkey)
+#   - Transaction:            Base class providing transaction type and assigned ID
+#   - CreateCoinTransaction:  Creates new coins; no inputs; assigned outputs get IDs upon assignment
+#   - PayCoinTransaction:     Consumes input coins and creates new output coins; signatures required
+#   - Block:                  Wraps a single transaction with a reference to the previous block hash
+#   - Ledger:                 Validates transactions, updates UTXO set, and appends blocks to the chain
+#
+# Validation rules (enforced in Ledger.process_transaction):
+#   1) Inputs must exist and be owned by the signer(s).
+#   2) No double-spending: inputs must be currently unspent in the ledger.
+#   3) Conservation of value: sum(inputs) == sum(outputs).
+#   4) Valid signatures from owners of all consumed coins.
+#
+# Signatures:
+#   - verifySignature(pubKey, message, signature) is a stub used for demonstration.
+#     In this simulation it accepts signatures of the form "sig_for_<pubKey>" and
+#     does not perform real cryptography.
+#
+# IDs and blocks:
+#   - The Ledger assigns monotonically increasing transaction IDs.
+#   - Each block’s "hash" is simplified to the transaction’s ID.
+#   - The chain is a list of Blocks; last_block.hash is stored in each new Block.
+#
+# Public API highlights:
+#   - Ledger.create_new_coins(values, recipients): Mint new coins via CreateCoin.
+#   - Ledger.process_transaction(tx): Validate and, if valid, append to the chain.
+#   - Ledger.get_balance(pubkey): Sum of unspent coins for an owner.
+#   - Ledger.get_transaction_history(): List of (tx_id, tx_type).
+#   - Ledger.print_full_state(): Debug printout of chain, UTXO set, and balances.
+#
+# Simplifications:
+#   - No networking, consensus, mining, or PoW; single validator (G).
+#   - One transaction per block; block hash == tx id; no timestamps or Merkle trees.
+#   - Signatures are mocked; no real cryptographic verification is performed.
+#
+# Educational purpose:
+#   This code is intended to illustrate core UTXO and validation concepts, not to serve
+#   as a secure or production-ready cryptocurrency implementation.
+
+
+
+
+
 # helper function mentioned in the homework assignment
 def verifySignature(pubKey, message, signature):
     """
